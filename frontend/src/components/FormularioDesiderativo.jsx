@@ -2,10 +2,27 @@ import React, { useState, useEffect } from "react";
 
 // Puedes editar este array según los fileIds de tu bibliografía real
 const BIBLIOGRAFIA = [
-  { id: "files/wsd4dpqu0915", nombre: "WSD4DPQ - Cuestionario desiderativo" },
-  { id: "files/bullying", nombre: "Bullying y desiderativo" },
-  { id: "files/casos", nombre: "Casos clínicos desiderativo" },
-  // ...añade aquí todos tus fileIds y títulos
+ { id: "files/analisis_de_las_respuestas_al_cuestionar", nombre: "ANaLISIS_DE_LAS_RESPUESTAS_AL_CUESTIONAR.pdf" },
+  { id: "files/caso_jade", nombre: "CASO JADE.pdf" },
+  { id: "files/casos", nombre: "CASOS.pdf" },
+  { id: "files/cd_diana", nombre: "CD DIANA.pdf" },
+  { id: "files/cd_graciela_celener", nombre: "CD Graciela Celener.pdf" },
+  { id: "files/cd_pulsiones_y_defensas_en_patologías_desvalimiento", nombre: "CD pulsiones y defensas en patologías desvalimiento.pdf" },
+  { id: "files/cuadro_proye_-_catexias_positivas_y_negativas", nombre: "Cuadro proye - Catexias positivas y negativas.pdf" },
+  { id: "files/cuestionario_desiderativo_aplicado_a_niños2", nombre: "Cuestionario desiderativo aplicado a niños2.pdf" },
+  { id: "files/cuestionario_desiderativo-sneiderman3", nombre: "Cuestionario desiderativo-Sneiderman3.pdf" },
+  { id: "files/indicadores-psicopatologicos_-_cd", nombre: "Indicadores-Psicopatologicos - CD.pdf" },
+  { id: "files/o_questionario_desiderativo_fundamentos", nombre: "O_questionario_desiderativo_fundamentos.pdf" },
+  { id: "files/ocampo_arzeno", nombre: "Ocampo Arzeno.pdf" },
+  { id: "files/preconsciente_y_su_relación_con_el_lenguaje", nombre: "Preconsciente y su relación con el lenguaje.pdf" },
+  { id: "files/psicodiagnostico_clinico_93-117", nombre: "Psicodiagnostico Clinico 93-117.pdf" },
+  { id: "files/sneiderman_2011-cuestionario", nombre: "Sneiderman_2011-Cuestionario.pdf" },
+  { id: "files/teorÍa,_tÉcnica_y_aplicaciÓn", nombre: "TEORÍA, TÉCNICA Y APLICACIÓN.pdf" },
+  { id: "files/una_contribución_a_la_interpretación_del_cuestionario_desiderativo", nombre: "Una contribución a la interpretación del Cuestionario Desiderativo.pdf" },
+  { id: "files/vinculo_hostil", nombre: "Vinculo hostil.pdf" },
+  { id: "files/bullying", nombre: "bullying.pdf" },
+  { id: "files/criterios_de_interpretación", nombre: "criterios de interpretación.pdf" },
+  { id: "files/niños_latentes", nombre: "niños latentes.pdf" },
 ];
 
 export default function FormularioDesiderativo() {
