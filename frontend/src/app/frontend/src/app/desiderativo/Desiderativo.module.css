@@ -1,0 +1,49 @@
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.header, header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.subtitle {
+  color: #888;
+}
+.form-section {
+  margin-bottom: 2rem;
+}
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+.form-group {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+input, select, textarea {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.5em 0.6em;
+  border: 1px solid #ccd;
+  border-radius: 6px;
+}
+button[type="submit"] {
+  background: #2c3e50;
+  color: white;
+  border: none;
+  padding: 0.7em 1.5em;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+/* ...y todo lo que necesites de tu form.css de App2 */
