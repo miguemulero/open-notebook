@@ -1,180 +1,251 @@
 'use client';
 
-import React, { useState } from 'react';
-import styles from './Desiderativo.module.css'; // si usas CSS Module
+import React, { useState, useRef } from 'react';
+import styles from './Desiderativo.module.css';
 
-type Catexia = {
-  texto: string;
-  motivo: string;
-};
+type Catexia = { texto: string; motivo: string };
 
 export default function DesiderativoPage() {
-  // Estado para catexias
-  const [catexiasPositivas, setCatexiasPositivas] = useState<Catexia[]>([]);
-  const [catexiasNegativas, setCatexiasNegativas] = useState<Catexia[]>([]);
+  // Estados para el formulario principal
+  const [form, setForm] = useState({
+    nombre: '',
+    edad: '',
+    genero: '',
+    nivel_educativo: '',
+    fecha: '',
+    modalidad: 'estandar',
+    informacion: '',
+    asociaciones: '',
+    recuerdo: '',
+  });
 
-  // Inputs controlados para añadir catexia
-  const [nuevaCatexiaPos, setNuevaCatexiaPos] = useState<Catexia>({ texto: '', motivo: '' });
-  const [nuevaCatexiaNeg, setNuevaCatexiaNeg] = useState<Catexia>({ texto: '', motivo: '' });
+  // Estados para catexias y los campos temporales de nueva catexia
+  const [catexiasPos, setCatexiasPos] = useState<Catexia[]>([]);
+  const [catexiasNeg, setCatexiasNeg] = useState<Catexia[]>([]);
+  const [newCatPos, setNewCatPos] = useState<Catexia>({ texto: '', motivo: '' });
+  const [newCatNeg, setNewCatNeg] = useState<Catexia>({ texto: '', motivo: '' });
 
-  // Métodos de añadir/borrar
-  const addCatexiaPositiva = () => {
-    if (nuevaCatexiaPos.texto.trim() !== '') {
-      setCatexiasPositivas([...catexiasPositivas, nuevaCatexiaPos]);
-      setNuevaCatexiaPos({ texto: '', motivo: '' });
-    }
-  };
-  const addCatexiaNegativa = () => {
-    if (nuevaCatexiaNeg.texto.trim() !== '') {
-      setCatexiasNegativas([...catexiasNegativas, nuevaCatexiaNeg]);
-      setNuevaCatexiaNeg({ texto: '', motivo: '' });
-    }
-  };
-  const removeCatexiaPos = (idx: number) =>
-    setCatexiasPositivas(catexiasPositivas.filter((_, i) => i !== idx));
-  const removeCatexiaNeg = (idx: number) =>
-    setCatexiasNegativas(catexiasNegativas.filter((_, i) => i !== idx));
-
-  // Para limpiar todo el formulario
-  const handleLimpiar = () => {
-    (document.getElementById('desiderativo-form') as HTMLFormElement)?.reset();
-    setCatexiasPositivas([]);
-    setCatexiasNegativas([]);
-    setNuevaCatexiaPos({ texto: '', motivo: '' });
-    setNuevaCatexiaNeg({ texto: '', motivo: '' });
-    setResultado('');
-    setMostrarResultado(false);
-  };
-
-  // Estado y lógica análisis y mostrar resultados
-  const [resultado, setResultado] = useState<string>('');
+  // Estado resultado informe y visibilidad
+  const [resultado, setResultado] = useState('');
   const [mostrarResultado, setMostrarResultado] = useState(false);
 
-  // Lógica para “Analizar protocolo” (aquí deberías construir el informe real)
-  const handleAnalizar = (event: React.FormEvent) => {
-    event.preventDefault();
-    // Aquí construirías el prompt/informe (ejemplo de demo a continuación)
-    setResultado('INFORME GENERADO.\n\n(Construir aquí el prompt con info del formulario y catexias)');
+  // Para scroll al resultado tras analizar
+  const resultRef = useRef<HTMLTextAreaElement>(null);
+
+  function handleFormChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  // Lógica para catexias positivas
+  function addCatexiaPos() {
+    if (newCatPos.texto.trim()) {
+      setCatexiasPos([...catexiasPos, newCatPos]);
+      setNewCatPos({ texto: '', motivo: '' });
+    }
+  }
+  function removeCatexiaPos(idx: number) {
+    setCatexiasPos(catexiasPos.filter((_, i) => i !== idx));
+  }
+
+  // Lógica para catexias negativas
+  function addCatexiaNeg() {
+    if (newCatNeg.texto.trim()) {
+      setCatexiasNeg([...catexiasNeg, newCatNeg]);
+      setNewCatNeg({ texto: '', motivo: '' });
+    }
+  }
+  function removeCatexiaNeg(idx: number) {
+    setCatexiasNeg(catexiasNeg.filter((_, i) => i !== idx));
+  }
+
+  // Limpiar todo
+  function handleLimpiar() {
+    setForm({
+      nombre: '',
+      edad: '',
+      genero: '',
+      nivel_educativo: '',
+      fecha: '',
+      modalidad: 'estandar',
+      informacion: '',
+      asociaciones: '',
+      recuerdo: '',
+    });
+    setCatexiasPos([]);
+    setCatexiasNeg([]);
+    setNewCatPos({ texto: '', motivo: '' });
+    setNewCatNeg({ texto: '', motivo: '' });
+    setResultado('');
+    setMostrarResultado(false);
+  }
+
+  // Analizar protocolo
+  function handleAnalizar(e: React.FormEvent) {
+    e.preventDefault();
+    // Arma aquí el informe con todos los datos y catexias (aquí solo demo)
+    const informe = [
+      `INFORME DE PRUEBA (rellena campos y catexias reales)`,
+      `---`,
+      `Nombre/ID: ${form.nombre}`,
+      `Edad: ${form.edad}`,
+      `Sexo: ${form.genero}`,
+      `Nivel educativo: ${form.nivel_educativo}`,
+      `Fecha de aplicación: ${form.fecha}`,
+      `Modalidad: ${form.modalidad}`,
+      '',
+      `Información contextual: ${form.informacion || '(ninguna)'}`,
+      '',
+      `🟢 Catexias Positivas:`,
+      ...catexiasPos.map((cat, i) => `${i + 1}. ${cat.texto} - ${cat.motivo}`),
+      '',
+      `🔴 Catexias Negativas:`,
+      ...catexiasNeg.map((cat, i) => `${i + 1}. ${cat.texto} - ${cat.motivo}`),
+      '',
+      `Asociaciones espontáneas: ${form.asociaciones || '(ninguna)'}`,
+      `Recuerdo positivo: ${form.recuerdo || '(ninguno)'}`,
+    ].join('\n');
+
+    setResultado(informe);
     setMostrarResultado(true);
-    // puedes además enviar datos al backend si hace falta
-  };
+    setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+  }
 
   return (
     <div className={styles.container}>
-      {/* ... header igual ... */}
+      <header className={styles['app-header']}>
+        <div className={styles['header-title']}>
+          <img src="/icon black.png" alt="Icono" className={styles['app-icon']} />
+          <div className={styles['header-text']}>
+            <h1 className={styles['app-title']}>Análisis Cuestionario Desiderativo</h1>
+            <p className={styles['subtitle']}>Análisis clínico integral</p>
+          </div>
+        </div>
+      </header>
       <main>
         <form id="desiderativo-form" onSubmit={handleAnalizar} autoComplete="off">
-          <section className={styles['form-section'] + ' ' + styles['form-section--datos']}>
+          <section className={`${styles['form-section']} ${styles['form-section--datos']}`}>
             <h2>Datos</h2>
-            {/* ... aquí el bloque datos generales, igual que antes ... */}
+            <div className={styles['form-row']}>
+              <div className={styles['form-group']}>
+                <label htmlFor="nombre">Nombre/ID del protocolo *</label>
+                <input type="text" name="nombre" id="nombre" required value={form.nombre} onChange={handleFormChange} placeholder="Ej: Protocolo ACR" />
+              </div>
+              <div className={styles['form-group']}>
+                <label htmlFor="edad">Edad *</label>
+                <input type="number" name="edad" id="edad" min={4} max={100} required value={form.edad} onChange={handleFormChange} placeholder="Años" />
+              </div>
+            </div>
+            <div className={styles['form-row']}>
+              <div className={styles['form-group']}>
+                <label htmlFor="genero">Sexo</label>
+                <select id="genero" name="genero" value={form.genero} onChange={handleFormChange}>
+                  <option value="">Seleccionar...</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                  <option value="otro">Otro</option>
+                  <option value="no-especifica">Prefiere no especificar</option>
+                </select>
+              </div>
+              <div className={styles['form-group']}>
+                <label htmlFor="nivel_educativo">Nivel educativo</label>
+                <select id="nivel_educativo" name="nivel_educativo" value={form.nivel_educativo} onChange={handleFormChange}>
+                  <option value="">Seleccionar...</option>
+                  <option value="inicial">Inicial</option>
+                  <option value="primario">Primario</option>
+                  <option value="secundario">Secundario</option>
+                  <option value="terciario">Terciario</option>
+                  <option value="universitario">Universitario</option>
+                  <option value="posgrado">Posgrado</option>
+                </select>
+              </div>
+            </div>
+            <div className={styles['form-row']}>
+              <div className={styles['form-group']}>
+                <label htmlFor="fecha">Fecha de aplicación *</label>
+                <input type="date" name="fecha" id="fecha" required value={form.fecha} onChange={handleFormChange} />
+              </div>
+              <div className={styles['form-group']}>
+                <label htmlFor="modalidad">Modalidad de aplicación</label>
+                <select id="modalidad" name="modalidad" value={form.modalidad} onChange={handleFormChange}>
+                  <option value="estandar">Estándar</option>
+                  <option value="guiada">Guiada</option>
+                  <option value="modificada">Modificada</option>
+                </select>
+              </div>
+            </div>
+            <div className={styles['form-group']}>
+              <label htmlFor="informacion">Información contextual relevante</label>
+              <textarea id="informacion" name="informacion" rows={3} placeholder="Motivo de consulta, antecedentes, observaciones de conducta durante la aplicación..." value={form.informacion} onChange={handleFormChange} />
+            </div>
           </section>
 
           <div className={styles['catexias-two-col']}>
             <section className={styles['form-section']}>
               <h2>🟢 Catexias Positivas</h2>
-              {catexiasPositivas.map((cat, idx) => (
-                <div className="catexia-item" key={idx}>
+              {catexiasPos.map((cat, idx) => (
+                <div className={styles['catexia-item']} key={idx}>
                   <strong>{cat.texto}</strong>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    style={{ float: 'right' }}
-                    onClick={() => removeCatexiaPos(idx)}
-                  >
+                  <button type="button" className={`${styles.btn} ${styles['btn-danger']}`} style={{ float: 'right' }} onClick={() => removeCatexiaPos(idx)}>
                     Eliminar
                   </button>
                   <div style={{ fontSize: "12px", color: "#a9b6d3" }}>{cat.motivo}</div>
                 </div>
               ))}
-              {/* Inputs para nueva catexia positiva */}
-              <div style={{ marginTop: 8 }}>
-                <input
-                  type="text"
-                  value={nuevaCatexiaPos.texto}
-                  onChange={e => setNuevaCatexiaPos({ ...nuevaCatexiaPos, texto: e.target.value })}
-                  placeholder="Texto de la catexia"
-                />
-                <input
-                  type="text"
-                  value={nuevaCatexiaPos.motivo}
-                  onChange={e => setNuevaCatexiaPos({ ...nuevaCatexiaPos, motivo: e.target.value })}
-                  placeholder="Motivo u observación"
-                />
-                <button type="button" className="btn btn-primary" onClick={addCatexiaPositiva}>
-                  Añadir
-                </button>
+              <div style={{ marginTop: 8, display: "flex", gap: 6 }}>
+                <input type="text" value={newCatPos.texto} onChange={e => setNewCatPos({ ...newCatPos, texto: e.target.value })} placeholder="Texto de la catexia" />
+                <input type="text" value={newCatPos.motivo} onChange={e => setNewCatPos({ ...newCatPos, motivo: e.target.value })} placeholder="Motivo u observación" />
+                <button type="button" className={`${styles.btn} ${styles['btn-primary']}`} onClick={addCatexiaPos}>Añadir</button>
               </div>
             </section>
-
             <section className={styles['form-section']}>
               <h2>🔴 Catexias Negativas</h2>
-              {catexiasNegativas.map((cat, idx) => (
-                <div className="catexia-item" key={idx}>
+              {catexiasNeg.map((cat, idx) => (
+                <div className={styles['catexia-item']} key={idx}>
                   <strong>{cat.texto}</strong>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    style={{ float: 'right' }}
-                    onClick={() => removeCatexiaNeg(idx)}
-                  >
+                  <button type="button" className={`${styles.btn} ${styles['btn-danger']}`} style={{ float: 'right' }} onClick={() => removeCatexiaNeg(idx)}>
                     Eliminar
                   </button>
                   <div style={{ fontSize: "12px", color: "#a9b6d3" }}>{cat.motivo}</div>
                 </div>
               ))}
-              {/* Inputs para nueva catexia negativa */}
-              <div style={{ marginTop: 8 }}>
-                <input
-                  type="text"
-                  value={nuevaCatexiaNeg.texto}
-                  onChange={e => setNuevaCatexiaNeg({ ...nuevaCatexiaNeg, texto: e.target.value })}
-                  placeholder="Texto de la catexia"
-                />
-                <input
-                  type="text"
-                  value={nuevaCatexiaNeg.motivo}
-                  onChange={e => setNuevaCatexiaNeg({ ...nuevaCatexiaNeg, motivo: e.target.value })}
-                  placeholder="Motivo u observación"
-                />
-                <button type="button" className="btn btn-primary" onClick={addCatexiaNegativa}>
-                  Añadir
-                </button>
+              <div style={{ marginTop: 8, display: "flex", gap: 6 }}>
+                <input type="text" value={newCatNeg.texto} onChange={e => setNewCatNeg({ ...newCatNeg, texto: e.target.value })} placeholder="Texto de la catexia" />
+                <input type="text" value={newCatNeg.motivo} onChange={e => setNewCatNeg({ ...newCatNeg, motivo: e.target.value })} placeholder="Motivo u observación" />
+                <button type="button" className={`${styles.btn} ${styles['btn-primary']}`} onClick={addCatexiaNeg}>Añadir</button>
               </div>
             </section>
           </div>
-          {/* ...el resto del formulario... */}
+
+          <section className={styles['form-section']}>
+            <h2>Asociaciones y Recuerdo</h2>
+            <div className={styles['form-group']}>
+              <label htmlFor="asociaciones">Asociaciones espontáneas</label>
+              <textarea id="asociaciones" name="asociaciones" rows={3} placeholder="Asociaciones libres, comentarios espontáneos durante o después de la aplicación..." value={form.asociaciones} onChange={handleFormChange} />
+            </div>
+            <div className={styles['form-group']}>
+              <label htmlFor="recuerdo">Recuerdo positivo</label>
+              <textarea id="recuerdo" name="recuerdo" rows={2} placeholder="Recuerdo positivo solicitado al finalizar..." value={form.recuerdo} onChange={handleFormChange} />
+            </div>
+          </section>
+
           <section className={styles['form-actions']}>
-            <button type="button" id="limpiar" className="btn btn-secondary" onClick={handleLimpiar}>
+            <button type="button" id="limpiar" className={`${styles.btn} ${styles['btn-secondary']}`} onClick={handleLimpiar}>
               Limpiar formulario
             </button>
-            <button type="submit" id="analizar" className="btn btn-primary">
+            <button type="submit" id="analizar" className={`${styles.btn} ${styles['btn-primary']}`}>
               Analizar protocolo
             </button>
           </section>
         </form>
 
-        <section
-          id="result-section"
-          className={styles['result-section']}
-          style={{ display: mostrarResultado ? 'block' : 'none' }}
-        >
+        <section id="result-section" className={styles['result-section']} style={{ display: mostrarResultado ? 'block' : 'none' }}>
           <div className={styles['result-header']}>
             <h2>Informe de Análisis</h2>
-            <button
-              type="button"
-              id="guardar-imprimir"
-              className="btn btn-success"
-              onClick={() => window.print()}
-            >
+            <button type="button" id="guardar-imprimir" className={`${styles.btn} ${styles['btn-success']}`} onClick={() => window.print()}>
               Guardar / Imprimir
             </button>
           </div>
-          <textarea
-            id="result-text"
-            className="result-textarea"
-            readOnly
-            value={resultado}
-          ></textarea>
+          <textarea id="result-text" ref={resultRef} className="result-textarea" readOnly value={resultado}></textarea>
         </section>
       </main>
       <footer className={styles['app-footer']} aria-hidden="true"></footer>
