@@ -1,44 +1,32 @@
 'use client';
 
 import React from 'react';
-// Si tienes un sistema de estilos de Open Notebook, importa el CSS aquí.
-// Si vas a migrar tu 'form.css', cámbialo por un import de un CSS module:
-// import styles from './Desiderativo.module.css';
 
 export default function DesiderativoPage() {
   return (
     <div className="container">
-      <header>
-        <h1>📋 Análisis Cuestionario Desiderativo</h1>
-        <p className="subtitle">Análisis clínico integral</p>
+      <header className="app-header">
+        <div className="header-title">
+          <img src="/icon black.png" alt="Icono" className="app-icon" />
+          <div className="header-text">
+            <h1 className="app-title">Análisis Cuestionario Desiderativo</h1>
+            <p className="subtitle">Análisis clínico integral</p>
+          </div>
+        </div>
       </header>
+
       <main>
         <form id="desiderativo-form">
-          {/* DATOS DEL EVALUADO */}
-          <section className="form-section">
-            <h2>Datos del Evaluado</h2>
+          <section className="form-section form-section--datos">
+            <h2>Datos</h2>
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="nombre">Nombre/ID del protocolo *</label>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  required
-                  placeholder="Ej: Protocolo ACR"
-                />
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Protocolo ACR" />
               </div>
               <div className="form-group">
                 <label htmlFor="edad">Edad *</label>
-                <input
-                  type="number"
-                  id="edad"
-                  name="edad"
-                  min={4}
-                  max={100}
-                  required
-                  placeholder="Años"
-                />
+                <input type="number" id="edad" name="edad" min={4} max={100} required placeholder="Años" />
               </div>
             </div>
             <div className="form-row">
@@ -68,22 +56,88 @@ export default function DesiderativoPage() {
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="fecha">Fecha de aplicación *</label>
-                <input
-                  type="date"
-                  id="fecha"
-                  name="fecha"
-                  required
-                />
+                <input type="date" id="fecha" name="fecha" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="modalidad">Modalidad de aplicación</label>
+                <select id="modalidad" name="modalidad">
+                  <option value="estandar">Estándar</option>
+                  <option value="guiada">Guiada</option>
+                  <option value="modificada">Modificada</option>
+                </select>
               </div>
             </div>
+            <div className="form-group">
+              <label htmlFor="informacion">Información contextual relevante</label>
+              <textarea
+                id="informacion"
+                name="informacion"
+                rows={3}
+                placeholder="Motivo de consulta, antecedentes, observaciones de conducta durante la aplicación..."
+              />
+            </div>
           </section>
-          {/* Aquí añade más secciones de tu formulario según lo que tengas en App2 */}
-          {/* ... */}
-          <div>
-            <button type="submit">Generar Informe</button>
+
+          <div className="catexias-two-col">
+            <section className="form-section">
+              <h2>🟢 Catexias Positivas</h2>
+              <div id="positivas-container"></div>
+            </section>
+            <section className="form-section">
+              <h2>🔴 Catexias Negativas</h2>
+              <div id="negativas-container"></div>
+            </section>
+          </div>
+
+          <section className="form-section">
+            <h2>Asociaciones y Recuerdo</h2>
+            <div className="form-group">
+              <label htmlFor="asociaciones">Asociaciones espontáneas</label>
+              <textarea
+                id="asociaciones"
+                name="asociaciones"
+                rows={3}
+                placeholder="Asociaciones libres, comentarios espontáneos durante o después de la aplicación..."
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="recuerdo">Recuerdo positivo</label>
+              <textarea
+                id="recuerdo"
+                name="recuerdo"
+                rows={2}
+                placeholder="Recuerdo positivo solicitado al finalizar..."
+              />
+            </div>
+          </section>
+
+          <section className="form-actions">
+            <button type="button" id="limpiar" className="btn btn-secondary">
+              Limpiar formulario
+            </button>
+            <button type="button" id="analizar" className="btn btn-primary">
+              Analizar protocolo
+            </button>
+          </section>
+
+          <div className="status-container">
+            <div id="spinner" className="spinner" hidden></div>
+            <p id="statusText" className="status-text"></p>
           </div>
         </form>
+
+        <section id="result-section" className="result-section" style={{ display: 'none' }}>
+          <div className="result-header">
+            <h2>Informe de Análisis</h2>
+            <button type="button" id="guardar-imprimir" className="btn btn-success">
+              Guardar / Imprimir
+            </button>
+          </div>
+          <textarea id="result-text" className="result-textarea" readOnly></textarea>
+        </section>
       </main>
+
+      <footer className="app-footer" aria-hidden="true"></footer>
     </div>
   );
 }
