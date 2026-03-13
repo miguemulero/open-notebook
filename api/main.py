@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 import PyPDF2
 import os
 
-from bibliografia_map import FILEID_MAP
+from api.bibliografia_map import FILEID_MAP
 
 app = FastAPI()
 
